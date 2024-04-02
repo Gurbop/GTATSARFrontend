@@ -1,0 +1,209 @@
+---
+permalink: /profile/
+layout: base
+title: Profile
+search_exclude: true
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fetch Request Example</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    form {
+        margin: 20px;
+    }
+    input[type="text"], input[type="password"] {
+        padding: 10px;
+        margin-bottom: 10px;
+        width: 300px;
+    }
+    button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+    }
+    button:hover {
+        background-color: #0056b3;
+    }
+</style>
+</head>
+<body>
+<form id="form">
+    <input type="text" id="nameInput" placeholder="New name"><br>
+    <button type="button" onclick="sendData('name')">Submit Name</button><br>
+    <input type="password" id="passwordInput" placeholder="New password"><br>
+    <button type="button" onclick="sendData('password')">Submit Password</button><br>
+    <br>
+    <br>
+    <form id="imageUploadForm">
+        <input type="file" id="imageInput" accept="image/*" />
+        <button type="button" onclick="imageupload()">Submit File</button>
+    </form>
+    <p id="error"></p>
+
+    <button type="button" onclick="getimage()">Retrieve PFP</button><br>
+    <div id="imageContainer"></div>
+</form>
+
+<script>
+function sendData(type) {
+    const url ='http://127.0.0.1:8086/api/users/';
+
+    // Set the body of the request to include login data from the DOM
+    const body = {
+        password: document.getElementById("passwordInput").value,
+        name: document.getElementById("nameInput").value,
+    };
+
+    // Change options according to Authentication requirements
+    const authOptions = {
+        mode: 'cors', // no-cors, *cors, same-origin
+        credentials: 'include', // include, same-origin, omit
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        method: 'PUT    ', // Override the method property
+        cache: 'no-cache', // Set the cache property
+        body: JSON.stringify(body)
+    };
+
+    // Fetch JWT
+    fetch(url, authOptions)
+    .then(response => {
+        // handle error response from Web API
+        if (!response.ok) {
+            const errorMsg = 'Login error: ' + response.status;
+            document.getElementById("error").value = "Could not change information"
+            console.log(errorMsg);
+            return;
+        }
+        // Success!!!
+        // Redirect to the database page
+        document.getElementById("error").value = ""
+        window.location.href = "http://127.0.0.1:4100/CPT/"
+        ;
+    })
+    // catch fetch errors (ie ACCESS to server blocked)
+        .catch(err => {
+            document.getElementById("error").value = "Could not change information"
+            console.error(err);
+        });
+    }
+    function imageupload() {
+        const fileInput = document.getElementById('imageInput');
+        const file = fileInput.files[0];
+        let base64String = ""; // Initialize base64String variable
+        if (file) {
+            const file = fileInput.files[0];
+            console.log(file);
+            const reader = new FileReader();
+           
+            reader.readAsDataURL(file); // reading it in
+            reader.onload = () => {
+                // console.log("here234");
+                // console.log(reader.result);
+                base64String = reader.result; // convergin to base 64
+                // console.log(base64String);
+                const url = 'http://127.0.0.1:8086/api/users/images';
+                const body = {
+                    
+                    Image: base64String
+                };
+                console.log(body);
+                const AuthOptions = {
+                            mode: 'cors', // no-cors, *cors, same-origin
+                            credentials: 'include', // include, same-origin, omit
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            method: 'POST', // Override the method property
+                            cache: 'no-cache', // Set the cache property
+                            body: JSON.stringify(body)
+                        };
+                    // fetch the API
+                    fetch(url, AuthOptions)
+                    // response is a RESTful "promise" on any successful fetch
+                    .then(response => {
+                        // check for response errors and display
+                        if (response.status !== 200) {
+                            window.location.href = "http://127.0.0.1:4100/CPT/2024/01/31/401error.html";
+                        }
+                        // valid response will contain JSON data
+                        response.json().then(data => {
+                        // insert whatever code you want here
+                            // ADD A SUCCESS THING HERE
+                        })
+                    })
+                    // catch fetch errors (ie ACCESS to server blocked)
+                    .catch(err => {
+                    console.log(err)
+                    });
+                                
+                }   
+        } 
+        
+        else {
+            console.error('No file selected.');
+        }
+        
+
+        
+            // uploading to the database
+
+    }
+    function getimage(){
+        const url = 'http://127.0.0.1:8086/api/users/images';
+        const AuthOptions = {
+                    mode: 'cors', // no-cors, *cors, same-origin
+                    credentials: 'include', // include, same-origin, omit
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    method: 'GET', // Override the method property
+                    cache: 'no-cache', // Set the cache property
+                };
+            // fetch the API
+            fetch(url, AuthOptions)
+            // response is a RESTful "promise" on any successful fetch
+            .then(response => {
+                // check for response errors and display
+                if (response.status !== 200) {
+                    window.location.href = "http://127.0.0.1:4100/CPT/2024/01/31/401error.html";
+                }
+                // valid response will contain JSON data
+                response.json().then(data => {
+
+                    const imageContainer = document.getElementById("imageContainer");
+
+                const imageElement = document.createElement("img");
+               
+                imageElement.src = data;
+                imageContainer.innerHTML = ''; // Clear previous content
+                imageContainer.appendChild(imageElement);
+
+                console.log(imageElement.src);
+
+
+                    return data;
+                })
+
+            })
+            // catch fetch errors (ie ACCESS to server blocked)
+            .catch(err => {
+            console.log(err)
+            });
+    }
+</script>
+
+
+
+</body>
+</html>
