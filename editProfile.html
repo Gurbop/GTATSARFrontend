@@ -185,7 +185,7 @@ function sendData(type) {
                     const imageContainer = document.getElementById("imageContainer");
 
                 const imageElement = document.createElement("img");
-               
+                console.log(data);
                 imageElement.src = data;
                 imageContainer.innerHTML = ''; // Clear previous content
                 imageContainer.appendChild(imageElement);
