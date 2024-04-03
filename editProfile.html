@@ -55,7 +55,7 @@ search_exclude: true
 
 <script>
 function sendData(type) {
-    const url ='http://127.0.0.1:8086/api/users/';
+    const url ='http://127.0.0.1:4200/api/users/';
 
     // Set the body of the request to include login data from the DOM
     const body = {
@@ -88,7 +88,7 @@ function sendData(type) {
         // Success!!!
         // Redirect to the database page
         document.getElementById("error").value = ""
-        window.location.href = "http://127.0.0.1:4100/CPT/"
+        window.location.href = "http://127.0.0.1:4200/studentuser/"
         ;
     })
     // catch fetch errors (ie ACCESS to server blocked)
@@ -134,7 +134,8 @@ function sendData(type) {
                     .then(response => {
                         // check for response errors and display
                         if (response.status !== 200) {
-                            window.location.href = "http://127.0.0.1:4100/CPT/2024/01/31/401error.html";
+
+                            <!-- window.location.href = "http://127.0.0.1:4200/studentuser/2024/01/31/401error.html"; -->
                         }
                         // valid response will contain JSON data
                         response.json().then(data => {
