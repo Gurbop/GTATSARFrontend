@@ -145,13 +145,13 @@ function makePrediction() {
     })
     .then(result => {
         var predictionResultElement = document.getElementById("predictionResult");
-        if (result === "Accepted") {
-            predictionResultElement.style.color = "green";
-            createConfetti();
+        if (result === "Rejected") {
+            predictionResultElement.style.color = "red";
         } else if (result === "Waitlisted") {
             predictionResultElement.style.color = "yellow";
-        } else if (result === "Rejected") {
-            predictionResultElement.style.color = "red";
+        } else if (result === "Accepted") {
+            predictionResultElement.style.color = "green";
+            createConfetti();
         }
         predictionResultElement.textContent = result;
         alert("Prediction successful: " + result); 
