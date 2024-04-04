@@ -362,6 +362,46 @@ function sendScoreToAPI(username, uid, score) {
         });
 }
 
+// Function to send user score to the API
+function sendScoreToAPI(username, uid, score) {
+    const url = 'http://127.0.0.1:8085/users';
+
+    // Data to be sent in the request body
+    const data = {
+        username: username,
+        uid: uid,
+        game_points: score
+    };
+
+    // Configuring the fetch request
+    const options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    };
+
+    // Sending the POST request
+    fetch(url, options)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Score sent successfully:', data);
+            // Display alert indicating successful data sending
+            alert('Score sent successfully!');
+        })
+        .catch(error => {
+            console.error('Error sending score:', error);
+            // Display alert indicating failure in sending data
+            alert('Failed to send score to the backend!');
+        });
+}
+
 // Function to update user score and send it to the API
 function updateAndSendScore(username, uid, score) {
     // Update UI with the score
@@ -369,7 +409,9 @@ function updateAndSendScore(username, uid, score) {
     // document.getElementById('player-score').textContent = `Score: ${score}`;
 
     // Send the score to the API
+     if (score === 5) {
     sendScoreToAPI(username, uid, score);
+     }
 }
 
 // Function to handle player's score update and send it to the API
