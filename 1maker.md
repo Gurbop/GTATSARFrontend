@@ -137,7 +137,7 @@ permalink: /editor
         },
     };
     
-    const url = "http://127.0.0.1:8762/api/memeforge/maker/";
+    const url = "http://127.0.0.1:8085/api/memeforge/maker/";
     
     function error(message) {
         console.error(message);
