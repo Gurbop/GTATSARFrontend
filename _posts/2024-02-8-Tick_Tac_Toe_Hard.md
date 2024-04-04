@@ -1,11 +1,5 @@
 ---
-toc: false
-comments: false
-layout: default 
-title: Tic Tac Toe
-description: 
-type: hacks
-courses: { compsci: {week: 2} }
+layout: base
 ---
 
 <html lang="en">

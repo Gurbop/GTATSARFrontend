@@ -1,11 +1,5 @@
 ---
-toc: false
-comments: false
-layout: default
-title: Slot Machine Game
-description: 
-type: hacks
-courses: { compsci: {week: 2} }
+layout: base
 ---
 
 <html>
