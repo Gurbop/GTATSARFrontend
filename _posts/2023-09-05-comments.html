@@ -1,0 +1,171 @@
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Restaurant Comments</title>
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-image: radial-gradient(circle, #86B0DD, #FF6347, #40E0D0);
+        background-size: cover;
+        background-attachment: fixed;
+        color: #333;
+    }
+
+    h1, h2 {
+        text-align: center;
+        text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+        color: #fff;
+    }
+
+    form {
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 15px;
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+    }
+
+    label {
+        display: block;
+        margin-bottom: 10px;
+        font-size: 1.1em;
+        color: #333;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    button {
+        width: calc(100% - 22px);
+        padding: 12px;
+        margin-bottom: 20px;
+        border: none;
+        border-radius: 25px;
+        box-sizing: border-box;
+        font-size: 1em;
+    }
+
+    button {
+        background-color: #86B0DD;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    button:hover {
+        background-color: #6B8CAF;
+    }
+
+    table {
+        width: 90%;
+        margin: 20px auto;
+        border-collapse: collapse;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    th, td {
+        padding: 15px;
+        border-bottom: 1px solid #ddd;
+        text-align: left;
+    }
+
+    th {
+        background-color: #86B0DD;
+        color: white;
+    }
+
+    tr:hover {
+        background-color: rgba(134, 176, 221, 0.7);
+    }
+</style>
+
+</head>
+<body>
+    <h1>Restaurants Catalogue</h1>
+    
+    <h2>Submit personal reviews on restaruants here. Keep track of what restaurants you like!</h2>
+    <form id="commentForm">
+        <label for="restaurant">Restaurant:</label>
+        <input type="text" id="restaurant" name="restaurant" required><br><br>
+        
+        <label for="rating">Rating (1-10):</label>
+        <input type="number" id="rating" name="rating" min="1" max="10" required><br><br>
+
+        <button type="submit">Submit Comment</button>
+    </form>
+    
+    <h2>Comments</h2>
+    <table id="commentTable" border="1">
+        <thead>
+            <tr>
+                <th>UID</th>
+                <th>Restaurant</th>
+                <th>Rating</th>
+            </tr>
+        </thead>
+        <tbody id="commentBody">
+            
+        </tbody>
+    </table>
+
+    <script>
+function displayComments() {
+    const comments = JSON.parse(localStorage.getItem('comments')) || [];
+    const commentsTable = document.getElementById('commentBody'); 
+    commentsTable.innerHTML = ''; 
+
+    comments.forEach(comment => {
+        const row = document.createElement('tr');
+        
+        const uidCell = document.createElement('td');
+        uidCell.textContent = comment.uid;
+        row.appendChild(uidCell);
+        
+        const restaurantCell = document.createElement('td');
+        restaurantCell.textContent = comment.restaurantName;
+        row.appendChild(restaurantCell);
+
+        const ratingCell = document.createElement('td');
+        ratingCell.textContent = comment.rating;
+        row.appendChild(ratingCell);
+
+        commentsTable.appendChild(row);
+    });
+}
+
+function submitComment(event) {
+    event.preventDefault(); // NO TROLLS SENDING IN EMPTY COMMENTS
+
+    const restaurantName = document.getElementById('restaurant').value; // TAKES THE TEXT SO IT CAN TURN INTO JSON 
+    const rating = document.getElementById('rating').value; 
+
+    const newComment = {
+        uid: localStorage.getItem('uid'),
+        restaurantName,
+        rating
+    };
+ // THIS STUFF NEATLY FORMATS THE COMMENT INTO JSON FOR THE LOCALSTORAGE TO SAVE 
+    const comments = JSON.parse(localStorage.getItem('comments')) || [];
+    comments.push(newComment);
+    localStorage.setItem('comments', JSON.stringify(comments));
+
+    displayComments();
+    document.getElementById('commentForm').reset();
+}
+
+window.onload = function() {
+    displayComments();
+    document.getElementById('commentForm').addEventListener('submit', submitComment);
+};
+    </script>
+   
+</body>
+</html>
