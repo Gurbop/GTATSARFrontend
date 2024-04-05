@@ -26,6 +26,7 @@ layout: base
             border-radius: 10px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
             text-align: center;
+            margin-top: 50px;
         }
         .slot {
             display: inline-block;
@@ -65,34 +66,30 @@ layout: base
             font-size: 24px;
             margin-top: 20px;
         }
-        /* Animation for winning lights */
-        @keyframes winLight {
-            0% {
-                background-color: #ffec40;
-            }
-            50% {
-                background-color: #ffcc00;
-            }
-            100% {
-                background-color: #ffec40;
-            }
+        /* Add styles for the input field */
+        input[type="text"] {
+            padding: 10px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            outline: none;
+            color: black;
+            margin-top: 20px;
         }
-        /* Add a class for winning animation */
-        .win-animation {
-            animation: winLight 2s ease-in-out infinite;
+        /* Add styles for the submit button */
+        button {
+            padding: 10px 20px;
+            background-color: blue;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
         }
-        /* Casino-style background */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background-image: url('https://your-casino-background-image-url.jpg');
-            background-size: cover;
-            opacity: 0.5;
+        button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
@@ -105,10 +102,14 @@ layout: base
         <div class="credits" id="credits">Credits: 100</div>
         <p id="result-message" class="result-message"></p>
         <button id="spin-button" class="spin-button" onclick="spin()">Spin</button>
+        <!-- Name input box and submit button --><br><br>
+        <input type="text" id="player-name" placeholder="Enter your name">
+        <button onclick="submitToLeaderboard()">Submit Score</button>
     </div>
     <script>
         const symbols = ['🍒', '🍋', '🍊', '🍇', '🍎', '🍉', '🍓', '🍌'];
         let credits = 100;
+
         function spin() {
             const resultMessage = document.getElementById('result-message');
             const spinButton = document.getElementById('spin-button');
@@ -148,46 +149,61 @@ layout: base
                         credits += 10;
                         updateCredits();
                         resultMessage.textContent = 'You won 10 credits!';
-                        // Add the win animation class to the slots
-                        document.getElementById('slot1').classList.add('win-animation');
-                        document.getElementById('slot2').classList.add('win-animation');
-                        document.getElementById('slot3').classList.add('win-animation');
-                        // Re-enable the spin button after the animation duration
-                        setTimeout(() => {
-                            document.getElementById('slot1').classList.remove('win-animation');
-                            document.getElementById('slot2').classList.remove('win-animation');
-                            document.getElementById('slot3').classList.remove('win-animation');
-                            // Re-enable the spin button
-                            spinButton.disabled = false;
-                        }, 2000);
                     } else if (result[0] === result[1] || result[1] === result[2] || result[0] === result[2]) {
                         credits += 3;
                         updateCredits();
                         resultMessage.textContent = 'You won 3 credits!';
-                        // Add the win animation class to the slots
-                        document.getElementById('slot1').classList.add('win-animation');
-                        document.getElementById('slot2').classList.add('win-animation');
-                        document.getElementById('slot3').classList.add('win-animation');
-                        // Re-enable the spin button after the animation duration
-                        setTimeout(() => {
-                            document.getElementById('slot1').classList.remove('win-animation');
-                            document.getElementById('slot2').classList.remove('win-animation');
-                            document.getElementById('slot3').classList.remove('win-animation');
-                            // Re-enable the spin button
-                            spinButton.disabled = false;
-                        }, 2000);
                     } else {
                         resultMessage.textContent = 'You lost. Try again!';
-                        // Re-enable the spin button if not a win
-                        spinButton.disabled = false;
                     }
+                    // Re-enable the spin button after the animation
+                    spinButton.disabled = false;
                 }
             }
             // Start the slot animation
             animateSlots();
         }
+
         function updateCredits() {
             document.getElementById('credits').textContent = `Credits: ${credits}`;
+        }
+
+        // Function to submit player's score to the leaderboard
+        function submitToLeaderboard() {
+            const playerName = document.getElementById('player-name').value;
+            const playerScore = credits; // Assuming credits contains the player's score
+
+            // Data to be sent to the API
+            const data = {
+                name: playerName,
+                game_points: playerScore
+            };
+
+            // Configuring the fetch request
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            };
+
+            // Sending the POST request to the leaderboard API
+            fetch('http://127.0.0.1:5000/players', options)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Data sent to leaderboard:', data);
+                    alert('Score submitted to leaderboard successfully!');
+                })
+                .catch(error => {
+                    console.error('Error submitting score to leaderboard:', error);
+                    alert('Failed to submit score to leaderboard!');
+                });
         }
     </script>
 </body>

@@ -2,12 +2,16 @@
 layout: base
 ---
 
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tic Tac Toe</title>
 <style>
+    body, input, button {
+    font-family: 'Roboto', sans-serif;
+    }
     body {
         margin: 0;
         padding: 0;
@@ -66,6 +70,29 @@ layout: base
     .ai-money {
         background-color: blue;
     }
+        /* Styling for the input field */
+    input[type="text"] {
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+    color: black
+    }
+    /* Styling for the submit button */
+    button {
+    padding: 10px 20px;
+    background-color: blue;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    }
+    button:hover {
+    background-color: #0056b3;
+    }
 </style>
 </head>
 <body>
@@ -88,6 +115,14 @@ layout: base
 <div class="money-container">
     <div id="player-money" class="money-box player-money">Player Score: 0</div>
     <div id="ai-money" class="money-box ai-money">AI Score: 0</div>
+</div>
+
+<!-- New input box for entering player's name -->
+<br><br>
+<div>
+    <label for="player-name" color="white">Input Name:</label>
+    <input type="text" id="player-name" name="player-name">
+    <button onclick="submitToLeaderboard()">Submit to Leaderboard</button>
 </div>
 
 <script>
@@ -326,15 +361,15 @@ function initGame() {
 
 initGame(); // Call initGame() to start the game
 
-// Function to send user score to the API
-function sendScoreToAPI(username, uid, score) {
-    const url = 'http://127.0.0.1:8086/api/users';
+// Function to submit player's score to the leaderboard
+function submitToLeaderboard() {
+    const playerName = document.getElementById('player-name').value;
+    const playerScore = playerMoney; // Assuming playerMoney contains the player's score
 
-    // Data to be sent in the request body
+    // Data to be sent to the API
     const data = {
-        username: username,
-        uid: uid,
-        tic_tac_toe_points: score
+        name: playerName,
+        game_points: playerScore
     };
 
     // Configuring the fetch request
@@ -346,8 +381,8 @@ function sendScoreToAPI(username, uid, score) {
         body: JSON.stringify(data)
     };
 
-    // Sending the POST request
-    fetch(url, options)
+    // Sending the POST request to the leaderboard API
+    fetch('http://127.0.0.1:5000/players', options)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -355,90 +390,14 @@ function sendScoreToAPI(username, uid, score) {
             return response.json();
         })
         .then(data => {
-            console.log('Score sent successfully:', data);
+            console.log('Data sent to leaderboard:', data);
+            alert('Score submitted to leaderboard successfully!');
         })
         .catch(error => {
-            console.error('Error sending score:', error);
+            console.error('Error submitting score to leaderboard:', error);
+            alert('Failed to submit score to leaderboard!');
         });
 }
-
-// Function to send user score to the API
-function sendScoreToAPI(username, uid, score) {
-    const url = 'http://127.0.0.1:8085/users';
-
-    // Data to be sent in the request body
-    const data = {
-        username: username,
-        uid: uid,
-        game_points: score
-    };
-
-    // Configuring the fetch request
-    const options = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    };
-
-    // Sending the POST request
-    fetch(url, options)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Score sent successfully:', data);
-            // Display alert indicating successful data sending
-            alert('Score sent successfully!');
-        })
-        .catch(error => {
-            console.error('Error sending score:', error);
-            // Display alert indicating failure in sending data
-            alert('Failed to send score to the backend!');
-        });
-}
-
-// Function to update user score and send it to the API
-function updateAndSendScore(username, uid, score) {
-    // Update UI with the score
-    // For example:
-    // document.getElementById('player-score').textContent = `Score: ${score}`;
-
-    // Send the score to the API
-     if (score === 5) {
-    sendScoreToAPI(username, uid, score);
-     }
-}
-
-// Function to handle player's score update and send it to the API
-function updatePlayerScore(score) {
-    // Update player's score
-    playerMoney = score;
-    document.getElementById('player-money').textContent = `Player Score: ${playerMoney}`;
-
-    // Send the updated score to the API
-    updateAndSendScore('Thomas Edison', 'toby', playerMoney);
-}
-
-// Function to handle AI's score update and send it to the API
-function updateAIScore(score) {
-    // Update AI's score
-    aiMoney = score;
-    document.getElementById('ai-money').textContent = `AI Score: ${aiMoney}`;
-
-    // Send the updated score to the API
-    updateAndSendScore('Thomas Edison', 'toby', aiMoney);
-}
-
-// Inside the functions where player's and AI's scores are updated
-// Update the score and send it to the API
-// For example, inside the checkWin function:
-// updatePlayerScore(playerMoney); // Update and send player's score
-// updateAIScore(aiMoney); // Update and send AI's score
 </script>
 
 </body>
