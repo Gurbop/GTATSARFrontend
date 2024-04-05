@@ -1,75 +1,34 @@
----
-permalink: /login/
-layout: base
-title: Login
-search_exclude: true
----
-
-
-<style>
-        form {
-            max-width: 300px; /* Adjust the width as needed */
-            margin: 0 auto; /* Center the form on the page */
-            box-shadow: 0 0 10px rgba(0, 0, 255, 0.7); /* Box shadow for a subtle effect */
-            padding: 20px;
-            border-radius: 8px; /* Add rounded corners for a modern look */
-        }
-
-        input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1); /* Inner glow effect for input fields */
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            transition: box-shadow 0.3s ease; /* Add transition for a smooth effect */
-        }
-
-        input:focus {
-            outline: none; /* Remove default focus outline */
-            box-shadow: 0 0 10px rgba(0, 0, 255, 0.5); /* Change box shadow on focus for emphasis */
-        }
-
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            box-shadow: 0 0 10px rgba(0, 128, 0, 0.5); /* Box shadow for the button */
-            transition: box-shadow 0.3s ease; /* Add transition for a smooth effect */
-        }
-
-        button:hover {
-            box-shadow: 0 0 15px rgba(0, 128, 0, 1); /* Change box shadow on hover for emphasis */
-        }
-    </style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
     <div class="form-container">
         <h2 id="pageTitle">Login</h2>
         <form>
+            <input type="text" id="name" class="input" placeholder="Full Name"><br>
             <input type="text" id="user" class="input" placeholder="Username"><br>
             <input type="password" id="pass" class="input" placeholder="Password">
         </form>
         <button class="submit" onclick="storeUid()">Store UID</button>
-        <button class="submit" onclick="redirect()">LOGIN</button>
+        <button class="submit" onclick="redirect()">Proceed with Redirect</button>
         <p id="error"></p>
+        <button onclick="switchToSignup()">Switch to Signup</button>
     </div>
 
+    <script>
+        function switchToSignup() { //DONT WORRY ABOUT THIS STUFF ITS USELESS DONT USE IT ! 
+            window.location.href = "http://127.0.0.1:4100/cptproject/signuptest";
+        }
 
-
-
-    <!-- 
-    Below JavaScript code is designed to handle user authentication in a web application. It's written to work with a backend server that uses JWT (JSON Web Tokens) for authentication.
-
-    The script defines a function when the page loads. This function is triggered when the Login button in the HTML form above is pressed. 
-    -->
-<script>
         function storeUid() {
             const uid = document.getElementById("user").value.trim();
             localStorage.setItem('uid', uid);
             alert('UID stored successfully in local storage!');
         }
+
         function redirect() {
             const uid = localStorage.getItem('uid');
             if (!uid) {
@@ -78,6 +37,7 @@ search_exclude: true
             }
             // copy n pasted this part from login page. This prevents fraudulent behavior.
             data = {
+                "name": document.getElementById("name").value,
                 "uid": document.getElementById("user").value,
                 "password": document.getElementById("pass").value,
             }
@@ -92,6 +52,18 @@ search_exclude: true
             fetch('http://127.0.0.1:8085/api/users/authenticate', options)
             .then(response => {
                 if (response.ok) {
+                    // Handle successful login
+                    const headers = response.headers;
+                    const headerEntries = [...headers.entries()]
+                    console.log('Response Headers:', headerEntries)
+                    console.log('All Cookies:', document.cookie);
+                    document.getElementById("error").innerHTML = ""
+                    const jwtCookie = getCookie('jwt');
+                    if (jwtCookie) {
+                        console.log('JWT Token:', jwtCookie);
+                    } else {
+                        console.log('JWT Token not found');
+                    }
 
                     // THEN THE REDIRECT HAPPENS. PLEASE WORK. IF THIS DOSENT WORK i am going to pull a kenneth wang 11 22 
                     //change this link later when everything else works 
@@ -102,13 +74,12 @@ search_exclude: true
                 console.error("Error:", error);
             });
         }
+
         function getCookie(name) {
             const value = `; ${document.cookie}`;
             const parts = value.split(`; ${name}=`);
             if (parts.length === 2) return parts.pop().split(';').shift();
         }
-
-        // Attach login_user to the window object, allowing access to form action
-        window.login_user = login_user;
-</script>
-
+    </script>
+</body>
+</html>
