@@ -7,6 +7,9 @@ layout: base
     <title>Slot Machine Game</title>
     <style>
         body {
+    font-family: 'Roboto', sans-serif;
+    }
+        body {
             background-color: #000;
             font-family: Arial, sans-serif;
             color: #fff;
@@ -104,7 +107,7 @@ layout: base
         <button id="spin-button" class="spin-button" onclick="spin()">Spin</button>
         <!-- Name input box and submit button --><br><br>
         <input type="text" id="player-name" placeholder="Enter your name">
-        <button onclick="submitToLeaderboard()">Submit Score</button>
+        <button onclick="submitToLeaderboard()">Submit Score to Leaderboard</button>
     </div>
     <script>
         const symbols = ['🍒', '🍋', '🍊', '🍇', '🍎', '🍉', '🍓', '🍌'];

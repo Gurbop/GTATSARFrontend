@@ -55,7 +55,7 @@ layout: base
     .money-container {
         display: flex;
         justify-content: space-between;
-        width: 482px; /* Adjust as needed */
+        width: 482px; 
         margin-top: 20px;
     }
     .money-box {
@@ -70,7 +70,6 @@ layout: base
     .ai-money {
         background-color: blue;
     }
-        /* Styling for the input field */
     input[type="text"] {
     padding: 10px;
     border: 2px solid #ccc;
@@ -79,7 +78,6 @@ layout: base
     outline: none;
     color: black
     }
-    /* Styling for the submit button */
     button {
     padding: 10px 20px;
     background-color: blue;
@@ -99,7 +97,6 @@ layout: base
 
 <div id="game-container">
     <div class="container">
-        <!-- Boxes for the tic-tac-toe game -->
         <div class="box emptybox" id="box0"></div>
         <div class="box emptybox" id="box1"></div>
         <div class="box emptybox" id="box2"></div>
@@ -117,24 +114,21 @@ layout: base
     <div id="ai-money" class="money-box ai-money">AI Score: 0</div>
 </div>
 
-<!-- New input box for entering player's name -->
 <br><br>
 <div>
     <label for="player-name" color="white">Input Name:</label>
-    <input type="text" id="player-name" name="player-name">
+    <input type="text" id="player-name" name="player-name" placeholder="Enter your name">
     <button onclick="submitToLeaderboard()">Submit to Leaderboard</button>
 </div>
 
 <script>
-// JavaScript to handle the tic-tac-toe game logic
 const boxes = document.querySelectorAll('.box');
-let currentPlayer = ''; // Player's symbol (X or O)
-let aiSymbol = ''; // AI's symbol (opposite of player)
+let currentPlayer = ''; 
+let aiSymbol = ''; 
 let playerMoney = 0;
 let aiMoney = 0;
 let gameBoard = ['', '', '', '', '', '', '', '', ''];
 
-// Define winning combinations
 const winningCombinations = [
     [0, 1, 2], // Top row
     [3, 4, 5], // Middle row
@@ -146,12 +140,11 @@ const winningCombinations = [
     [2, 4, 6]  // Diagonal from top-right
 ];
 
-// Function to display the winning combination
 function displayWinningCombination(winningCombination, player) {
     winningCombination.forEach(index => {
         boxes[index].textContent = player;
-        boxes[index].style.fontSize = '100px'; // Increase font size
-        boxes[index].classList.add('winning-box'); // Add a class to identify winning boxes
+        boxes[index].style.fontSize = '100px'; 
+        boxes[index].classList.add('winning-box'); 
     });
 }
 
@@ -161,83 +154,68 @@ function checkWin(player) {
     });
 
     if (winningCombination) {
-        // Display the winning symbols
         displayWinningCombination(winningCombination, player);
 
-        // Check if AI wins after its move
         if (player === aiSymbol) {
             setTimeout(() => {
                 alert(`AI wins!`);
-                // Update AI's score
                 aiMoney++;
                 document.getElementById('ai-money').textContent = `AI Score: ${aiMoney}`;
                 resetGame();
-            }, 500); // Adjust delay as needed
+            }, 500); 
         } else {
-            // Check if player wins after its move
             setTimeout(() => {
                 alert(`Player wins!`);
-                // Update player's score
                 playerMoney++;
                 document.getElementById('player-money').textContent = `Player Score: ${playerMoney}`;
                 resetGame();
-            }, 500); // Adjust delay as needed
+            }, 500); 
         }
         return true;
     }
 
-    // Check for a tie (if the board is full)
     if (gameBoard.every(cell => cell !== '')) {
-        // Delay before showing the alert
         setTimeout(() => {
-            // Alert tie message
             alert('It\'s a tie!');
-            // Reset the game to start a new one
             resetGame();
-        }, 500); // Adjust delay as needed
+        }, 500); 
         return true;
     }
 
     return false;
 }
 
-// Event handler for box clicks
 function boxClickHandler(event) {
     const box = event.target;
     const index = parseInt(box.id.replace('box', ''));
     if (box.textContent === '' && gameBoard[index] === '') {
         box.textContent = currentPlayer;
-        box.style.fontSize = '100px'; // Increase font size
+        box.style.fontSize = '100px'; 
         gameBoard[index] = currentPlayer;
 
-        // Check if player wins after their move
         if (checkWin(currentPlayer)) {
             return;
         }
 
-        // Check for a tie (if the board is full)
         if (gameBoard.every(cell => cell !== '')) {
             alert('It\'s a tie!');
             return;
         }
 
-        makeAIMoveWithDelay(); // Make AI move after a delay
+        makeAIMoveWithDelay(); 
     }
 }
 
-// Inside the click event listener for player's move
-// After the player's move, call makeAIMove with a delay
+
 boxes.forEach(box => {
     box.addEventListener('click', boxClickHandler);
 });
 
-// Function to randomly assign X or O to player and determine AI's symbol
 function assignRoles() {
-    currentPlayer = Math.random() < 0.5 ? 'X' : 'O'; // Randomly assign X or O to player
-    aiSymbol = currentPlayer === 'X' ? 'O' : 'X'; // Determine AI's symbol based on player's
+    currentPlayer = Math.random() < 0.5 ? 'X' : 'O'; 
+    aiSymbol = currentPlayer === 'X' ? 'O' : 'X'; 
 }
 
-// Function to let the AI make a move
 function makeAIMove() {
     let emptyIndexes = [];
     gameBoard.forEach((cell, index) => {
@@ -246,19 +224,16 @@ function makeAIMove() {
         }
     });
 
-    // Check if AI can win in the next move
     for (let i = 0; i < emptyIndexes.length; i++) {
         let tempBoard = [...gameBoard];
         tempBoard[emptyIndexes[i]] = aiSymbol;
         for (let j = 0; j < winningCombinations.length; j++) {
             const [a, b, c] = winningCombinations[j];
             if (tempBoard[a] === aiSymbol && tempBoard[b] === aiSymbol && tempBoard[c] === aiSymbol) {
-                // AI can win, so block the winning move
                 gameBoard[emptyIndexes[i]] = aiSymbol;
                 boxes[emptyIndexes[i]].textContent = aiSymbol;
-                boxes[emptyIndexes[i]].style.fontSize = '100px'; // Increase font size
+                boxes[emptyIndexes[i]].style.fontSize = '100px'; 
 
-                // Check if AI wins after its move
                 if (checkWin(aiSymbol)) {
                     document.getElementById('ai-money').textContent = `AI Score: ${aiMoney}`;
                 }
@@ -267,22 +242,18 @@ function makeAIMove() {
         }
     }
 
-    // Check if player can win in the next move and block it
     for (let i = 0; i < emptyIndexes.length; i++) {
         let tempBoard = [...gameBoard];
         tempBoard[emptyIndexes[i]] = currentPlayer;
         for (let j = 0; j < winningCombinations.length; j++) {
             const [a, b, c] = winningCombinations[j];
             if (tempBoard[a] === currentPlayer && tempBoard[b] === currentPlayer && tempBoard[c] === currentPlayer) {
-                // Player can win, so block the winning move
                 gameBoard[emptyIndexes[i]] = aiSymbol;
                 boxes[emptyIndexes[i]].textContent = aiSymbol;
-                boxes[emptyIndexes[i]].style.fontSize = '100px'; // Increase font size
+                boxes[emptyIndexes[i]].style.fontSize = '100px'; 
 
-                // Check if AI wins after its move
                 if (checkWin(aiSymbol)) {
                     alert(`AI wins!`);
-                    // Update AI's score
                     aiMoney++;
                     document.getElementById('ai-money').textContent = `AI Score: ${aiMoney}`;
                 }
@@ -291,41 +262,33 @@ function makeAIMove() {
         }
     }
 
-    // If no winning moves to block, choose a random empty cell
     let randomIndex = Math.floor(Math.random() * emptyIndexes.length);
     let aiIndex = emptyIndexes[randomIndex];
-    // Place AI's symbol at the chosen index
     gameBoard[aiIndex] = aiSymbol;
     boxes[aiIndex].textContent = aiSymbol;
-    boxes[aiIndex].style.fontSize = '100px'; // Increase font size
-
-    // Check if AI wins after its move
+    boxes[aiIndex].style.fontSize = '100px'; 
     if (checkWin(aiSymbol)) {
         alert(`AI wins!`);
-        // Update AI's score
         aiMoney++;
         document.getElementById('ai-money').textContent = `AI Score: ${aiMoney}`;
     }
 }
 
 
-// Function to reset the game
 function resetGame() {
     gameBoard = ['', '', '', '', '', '', '', '', ''];
     boxes.forEach(box => {
         box.textContent = '';
-        box.style.fontSize = '48px'; // Reset font size
-        box.classList.remove('winning-box'); // Remove the winning-box class
+        box.style.fontSize = '48px'; 
+        box.classList.remove('winning-box'); 
     });
     assignRoles();
-    // Add event listeners for box clicks
     boxes.forEach(box => {
         box.addEventListener('click', boxClickHandler);
     });
 }
 
-// Inside the click event listener for player's move
-// After the player's move, call makeAIMove with a delay
+
 boxes.forEach((box, index) => {
     box.addEventListener('click', () => {
         if (box.textContent === '' && gameBoard[index] === '') {
@@ -333,46 +296,39 @@ boxes.forEach((box, index) => {
             box.style.fontSize = '100px'; // Increase font size
             gameBoard[index] = currentPlayer;
 
-            // Check if player wins after their move
             if (checkWin(currentPlayer)) {
                 return;
             }
 
-            // Check for a tie (if the board is full)
             if (gameBoard.every(cell => cell !== '')) {
                 alert('It\'s a tie!');
                 return;
             }
 
-            makeAIMoveWithDelay(); // Make AI move after a delay
+            makeAIMoveWithDelay(); 
         }
     });
 });
 
-// Function to let the AI make a move after a delay
 function makeAIMoveWithDelay() {
-    setTimeout(makeAIMove, 500); // 0.5-second delay
+    setTimeout(makeAIMove, 500); 
 }
 
-// Function to initialize the game
 function initGame() {
     assignRoles();
 }
 
-initGame(); // Call initGame() to start the game
+initGame(); 
 
-// Function to submit player's score to the leaderboard
 function submitToLeaderboard() {
     const playerName = document.getElementById('player-name').value;
-    const playerScore = playerMoney; // Assuming playerMoney contains the player's score
+    const playerScore = playerMoney; 
 
-    // Data to be sent to the API
     const data = {
         name: playerName,
         game_points: playerScore
     };
 
-    // Configuring the fetch request
     const options = {
         method: 'POST',
         headers: {
@@ -381,7 +337,6 @@ function submitToLeaderboard() {
         body: JSON.stringify(data)
     };
 
-    // Sending the POST request to the leaderboard API
     fetch('http://127.0.0.1:5000/players', options)
         .then(response => {
             if (!response.ok) {
@@ -390,12 +345,12 @@ function submitToLeaderboard() {
             return response.json();
         })
         .then(data => {
-            console.log('Data sent to leaderboard:', data);
-            alert('Score submitted to leaderboard successfully!');
+            console.log('data sent to leaderboard:', data);
+            alert('score submtted to leaderboard successfully!');
         })
         .catch(error => {
-            console.error('Error submitting score to leaderboard:', error);
-            alert('Failed to submit score to leaderboard!');
+            console.error('error submitting score to leaderboard:', error);
+            alert('failed to submit score to leaderboard!');
         });
 }
 </script>
