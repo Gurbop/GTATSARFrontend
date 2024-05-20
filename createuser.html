@@ -89,7 +89,7 @@ The script defines a function when the page loads. This function is triggered wh
 
     function create_user(){
         // Set Authenticate endpoint
-        const url ='http://127.0.0.1:8085/api/users/';
+        const url ='http://127.0.0.1:8086/api/users/';
 
         // Set the body of the request to include login data from the DOM
         const body = {
@@ -121,7 +121,7 @@ The script defines a function when the page loads. This function is triggered wh
             }
             // Success!!!
             // Redirect to the database page
-            window.location.href = "http://127.0.0.1:4200/student/login"
+            window.location.href = "http://127.0.0.1:8086/student/login"
             ;
         })
         // catch fetch errors (ie ACCESS to server blocked)

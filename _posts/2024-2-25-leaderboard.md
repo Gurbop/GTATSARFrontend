@@ -57,7 +57,7 @@ layout: default
 
 <script type="module">
   // Set Users endpoint (list of users)
-  const url = 'http://127.0.0.1:8085/players';
+  const url = 'http://127.0.0.1:8086/players';
 
   // prepare HTML result container for new output
   const resultContainer = document.getElementById("result");
