@@ -130,7 +130,7 @@ function makePrediction() {
         SAT: sat,
         Extracurricular_Activities: extracurriculars
     };
-    fetch('http://127.0.0.1:8086/api/users/Prediction', {
+    fetch('http://127.0.0.1:4200/api/users/Prediction', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

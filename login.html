@@ -89,13 +89,13 @@ search_exclude: true
                 body: JSON.stringify(data),
                 credentials: 'include'
             }
-            fetch('http://127.0.0.1:8086/api/users/authenticate', options)
+            fetch('http://127.0.0.1:4200/api/users/authenticate', options)
             .then(response => {
                 if (response.ok) {
 
                     // THEN THE REDIRECT HAPPENS. PLEASE WORK. IF THIS DOSENT WORK i am going to pull a kenneth wang 11 22 
                     //change this link later when everything else works 
-                    window.location.href = "http://127.0.0.1:8086/student/";
+                    window.location.href = "http://127.0.0.1:4200/student/";
                 }
             })
             .catch(error => {

@@ -100,7 +100,7 @@ type: tangibles
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
-            const backendUrl = 'http://127.0.0.1:8086';
+            const backendUrl = 'http://127.0.0.1:4200';
             function fetchLeaderboard(season) {
                 $.getJSON(`${backendUrl}/leaderboard?season=${season}`, function(data) {
                     $('#leaderboardTable tbody').empty();
@@ -212,7 +212,7 @@ function addToTour(tourName) {
   const payload = JSON.parse(atob(tokenParts[1]));
   const userId = payload.id;
   console.log("HAHA: "+ userId + " " +tourName)
-    var url = `http://127.0.0.1:8086
+    var url = `http://127.0.0.1:4200
     /api/tour/addtotours?id=${userId}&tour_name=${tourName}`;
     fetch(url, {
         method: 'POST'

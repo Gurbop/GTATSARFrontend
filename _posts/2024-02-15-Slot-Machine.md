@@ -192,7 +192,7 @@ layout: base
             };
 
             // Sending the POST request to the leaderboard API
-            fetch('http://127.0.0.1:8086/players', options)
+            fetch('http://127.0.0.1:4200/players', options)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
