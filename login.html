@@ -89,7 +89,7 @@ search_exclude: true
                 body: JSON.stringify(data),
                 credentials: 'include'
             }
-            fetch('http://127.0.0.1:4200/api/users/authenticate', options)
+            fetch('http://127.0.0.1:8085/api/users/authenticate', options)
             .then(response => {
                 if (response.ok) {
 
