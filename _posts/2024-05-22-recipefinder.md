@@ -62,7 +62,7 @@ permalink: recipe.html
 <script>
     async function getData() {
         ingredients = document.getElementById('ingredients').value;
-        const apiUrl = "http://127.0.0.1:8085/api/recipes/getrecipes/" + ingredients;
+        const apiUrl = "http://127.0.0.1:8092/api/recipes/getrecipes/" + ingredients;
         const response = await fetch(apiUrl);
         var data = await response.json();
         console.log(data);
