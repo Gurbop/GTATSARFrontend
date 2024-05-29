@@ -59,36 +59,64 @@ permalink: recipe.html
         }
     </style>
 </head>
-<script>
-    async function getData() {
-        ingredients = document.getElementById('ingredients').value;
-        const apiUrl = "http://127.0.0.1:8092/api/recipes/getrecipes/" + ingredients;
-        const response = await fetch(apiUrl);
-        var data = await response.json();
-        console.log(data);
-        let text = "<table>";
-        for (let x in data) {
-            text += "<tr><td>Recipe: " + data[x].title + "</td></tr>";
-            if (data[x].image) {
-                text += "<tr><td><img src='" + data[x].image + "' alt='Recipe Image'></td></tr>";
-            } else {
-                text += "<tr><td>Image not available</td></tr>";
+<head>
+    <script>
+        async function getData() {
+            // Get ingredients from the input field
+            let ingredients = document.getElementById('ingredients').value;  
+            // Get selected allergens
+            let checkboxes = document.querySelectorAll('input[name="allergens"]:checked');
+            let allergens = Array.from(checkboxes).map(checkbox => checkbox.value);
+            // Build the API URL
+            const apiUrl = "http://127.0.0.1:8092/api/recipes/getrecipes/" + ingredients + "?allergens=" + allergens.join(',');
+            try {
+                // Fetch data from the API
+                const response = await fetch(apiUrl);
+                var data = await response.json();
+                // Filter out recipes containing any selected allergens in their names
+                allergens.forEach(allergen => {
+                    data = data.filter(recipe => !recipe.title.toLowerCase().includes(allergen.toLowerCase()));
+                });
+                // Sort recipes by likes in descending order
+                data.sort((a, b) => b.likes - a.likes);
+                // Build the HTML table
+                let text = "<table border='1'><tr><th>Recipe</th><th>Image</th><th>Likes</th><th>Spoonacular ID</th></tr>";
+                for (let x in data) {
+                    text += "<tr><td>" + data[x].title + "</td>";
+                    if (data[x].image) {
+                        text += "<td><img src='" + data[x].image + "' alt='Recipe Image' width='100'></td>";
+                    } else {
+                        text += "<td>Image not available</td>";
+                    }
+                    text += "<td>" + data[x].likes + "</td>";
+                    text += "<td>" + data[x].id + "</td></tr>";
+                }
+                text += "</table>";
+                // Update the HTML content
+                document.getElementById("recipeForm").innerHTML = text;
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                document.getElementById("recipeForm").innerHTML = "Error fetching recipes. Please try again.";
             }
-            text += "<tr><td>Likes: " + data[x].likes + "</td></tr>";
-            text += "<tr><td>Spoonacular ID: " + data[x].id + "</td></tr>";
         }
-        text += "</table>";
-        document.getElementById("recipeForm").innerHTML = text;
-    };
-</script>
+    </script>
+</head>
 <body>
     <h1>Recipe Finder</h1>
     <img src="/student/images/Gourmet Guide.png" alt="Gourmet Guide Logo" width="100">
     <form id="recipeForm">
         <label for="ingredients">Enter ingredients (comma-separated):</label>
         <input type="text" name="ingredients" id="ingredients" required>
+        <br><br>
+        <label>Select types of food to exclude:</label><br>
+        <input type="checkbox" name="allergens" value="soup"> Soup<br>
+        <input type="checkbox" name="allergens" value="juice"> Juice<br>
+        <input type="checkbox" name="allergens" value="salad"> Salad<br>
+        <input type="checkbox" name="allergens" value="bowl"> Bowl<br>
+        <input type="checkbox" name="allergens" value="cake"> Cake<br>
+        <!-- Add more allergens as needed -->
+        <br>
         <button type="button" onClick='getData()'>Find Recipe</button>
     </form>
-
 </body>
 </html>
