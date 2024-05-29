@@ -1,12 +1,5 @@
 ---
-toc: true
-comments: false
-layout: post
-title: Ceaser-Cipher Encrypter
-description: 
-type: hacks
-courses: { compsci: {week: 36} }
-image: images/plan-dice-760.jpg
+layout: default
 ---
 
 <html lang="en">
@@ -82,11 +75,11 @@ tr:nth-child(even) {
 }
 </style>
 <body>
-
+<h1>Ceaser Cipher Encrypter</h1><br><br>
 
 <h3>User Guidlines</h3>
-  <p style="color: red;">- Please enter your raw data for encryption first and then click to get!</p>
-        <p style="color: red;">- Use Encrypted ID for sharing and decryption, dont share it with anyone you dont want known the encrypted data</p><br><br><center><br><br>
+  <p style="color: red;">- Please enter your raw data for encryption first and then click to get! <br>
+        - Use Encrypted ID for sharing and decryption, dont share it with anyone you dont want known the encrypted data</p><br><br><center><br><br>
     <input type="text" id="inputText" placeholder="Type & Enter for Encryption" onkeydown="if (event.keyCode === 13) sendData()"><br><br><br><br></center>
 <center>
     <button onclick="getEncryptedData()">Click to Get Encrypted Data</button><br><br><br><br>
